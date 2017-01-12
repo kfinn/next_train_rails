@@ -3,7 +3,6 @@ class StopTime < ApplicationRecord
   belongs_to :stop
 
   validate :must_be_unique
-  validates :arrival_time, :departure_time, presence: true
 
   private
 
