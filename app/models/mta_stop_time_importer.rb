@@ -3,18 +3,13 @@ require 'csv'
 class MtaStopTimeImporter
   def import!
     CSV.foreach(MtaDataImporter.mta_data_root + 'stop_times.csv', headers: true) do |row|
-      begin
-        StopTime.find_or_initialize_by(
-          trip: trip_from_row(row),
-          stop: stop_from_row(row)
-        ).update!(
-          arrival_time: adjust_invalid_datetime(row['arrival_time']),
-          departure_time: adjust_invalid_datetime(row['departure_time'])
-        )
-      rescue StandardError => e
-        binding.pry
-        raise e
-      end
+      StopTime.find_or_initialize_by(
+        trip: trip_from_row(row),
+        stop: stop_from_row(row)
+      ).update!(
+        arrival_time: adjust_invalid_datetime(row['arrival_time']),
+        departure_time: adjust_invalid_datetime(row['departure_time'])
+      )
     end
   end
 

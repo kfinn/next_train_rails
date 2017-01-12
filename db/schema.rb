@@ -10,7 +10,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170112053040) do
+ActiveRecord::Schema.define(version: 20170112093438) do
+
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+  enable_extension "cube"
+  enable_extension "earthdistance"
 
   create_table "routes", force: :cascade do |t|
     t.string   "mta_id",      null: false
@@ -31,9 +36,9 @@ ActiveRecord::Schema.define(version: 20170112053040) do
     t.integer  "stop_id"
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
-    t.index ["stop_id"], name: "index_stop_times_on_stop_id"
-    t.index ["trip_id", "stop_id"], name: "index_stop_times_on_trip_id_and_stop_id", unique: true
-    t.index ["trip_id"], name: "index_stop_times_on_trip_id"
+    t.index ["stop_id"], name: "index_stop_times_on_stop_id", using: :btree
+    t.index ["trip_id", "stop_id"], name: "index_stop_times_on_trip_id_and_stop_id", unique: true, using: :btree
+    t.index ["trip_id"], name: "index_stop_times_on_trip_id", using: :btree
   end
 
   create_table "stops", force: :cascade do |t|
@@ -45,7 +50,7 @@ ActiveRecord::Schema.define(version: 20170112053040) do
     t.integer  "parent_stop_id"
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
-    t.index ["parent_stop_id"], name: "index_stops_on_parent_stop_id"
+    t.index ["parent_stop_id"], name: "index_stops_on_parent_stop_id", using: :btree
   end
 
   create_table "trips", force: :cascade do |t|
@@ -55,7 +60,7 @@ ActiveRecord::Schema.define(version: 20170112053040) do
     t.integer  "direction_id", null: false
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
-    t.index ["route_id"], name: "index_trips_on_route_id"
+    t.index ["route_id"], name: "index_trips_on_route_id", using: :btree
   end
 
 end
