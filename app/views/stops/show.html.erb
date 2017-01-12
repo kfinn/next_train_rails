@@ -1,0 +1,25 @@
+<p id="notice"><%= notice %></p>
+
+<h1><%= @stop.name %></h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Routes</th>
+      <th colspan="1"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @stops.each do |stop| %>
+      <tr>
+        <td><%= stop.name %></td>
+        <td><%= stop.routes_description %></td>
+        <td><%= link_to 'Stop times', stop_path(stop) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>

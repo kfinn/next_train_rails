@@ -12,8 +12,7 @@ class StopTime < ApplicationRecord
   end
 
   def conflicting_stop_times_exist?
-    cst = conflicting_stop_times
-    cst.count > 1 || (cst.count == 1 && cst.first != self)
+    conflicting_stop_times.count > 1 || [self, nil].exclude?(conflicting_stop_times.first)
   end
 
   def conflicting_stop_times

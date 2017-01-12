@@ -6,7 +6,7 @@ class CreateStops < ActiveRecord::Migration[5.0]
       t.decimal :latitude, null: false
       t.decimal :longitude, null: false
       t.integer :location_type, null: false
-      t.references :parent_stop, foreign_key: true, null: true
+      t.references :parent_stop, foreign_key: { to_table: :stops }, null: true
 
       t.timestamps
     end
