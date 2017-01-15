@@ -2,7 +2,10 @@ class StopTime
   include ActiveModel::Model
 
   attr_accessor :stop_id, :trip_id, :scheduled, :latest_estimate, :latest_estimate_updated_at
-  delegate :route_id, to: :trip
+
+  def self.from(trip_id:, stop_id:)
+    StopTimeCollection.instance.find new(trip_id: trip_id, stop_id: stop_id).id
+  end
 
   def save
     StopTimeCollection.instance << self
@@ -25,7 +28,7 @@ class StopTime
     self.latest_estimate_updated_at = Time.zone.now
   end
 
-  def trip
-    @trip ||= Trip.find trip_id
+  def route_id
+    @route_id ||= trip_id.sub(/^[^_]+_/, '').sub(/\.\..*$/, '')
   end
 end

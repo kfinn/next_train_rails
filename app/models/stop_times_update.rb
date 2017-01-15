@@ -8,13 +8,9 @@ class StopTimesUpdate
       trip_update.stop_time_update.each do |stop_time_update|
         next unless stop_time_update.stop_id.present? && stop_time_update.departure.present?
 
-        stop_time = StopTime.find_or_initialize_by(
-          trip: Trip.find_by_mta_id_fragment(trip_update.trip.trip_id),
-          stop: Stop.find_by_mta_id(stop_time_update.stop_id)
-        ).update!(
-          realtime_departure_time: Time.zone.at(stop_time_update.departure.time).to_datetime,
-          realtime_departure_time_updated_at: Time.zone.now
-        )
+        args = { trip_id: trip_update.trip.trip_id, stop_id: stop_time_update.stop_id }
+        stop_time = StopTime.from(args) || StopTime.new(args).tap(&:save)
+        stop_time.latest_estimate = Time.zone.at(stop_time_update.departure.time).to_datetime
       end
     end
   end

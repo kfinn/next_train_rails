@@ -2,6 +2,7 @@ require 'csv'
 
 class MtaStopImporter
   def import!
+    Rails.logger.info 'MtaStopImporter starting'
     CSV.foreach(ApplicationHelper.mta_data_root + 'stops.csv', headers: true) do |row|
       if row['parent_station']
         parent_station = parent_stop_from_row row
@@ -16,6 +17,7 @@ class MtaStopImporter
         ).save
       end
     end
+    Rails.logger.info 'MtaStopImporter done'
   end
 
   def parent_stop_from_row(row)

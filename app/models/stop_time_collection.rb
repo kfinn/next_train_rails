@@ -7,6 +7,10 @@ class StopTimeCollection
     MtaStopTimeImporter.new.import! unless was_imported
   end
 
+  def find(id)
+    stop_times_by_id[id]
+  end
+
   def <<(stop_time)
     stop_times_by_id[stop_time.id] = stop_time
   end
