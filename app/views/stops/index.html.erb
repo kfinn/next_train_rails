@@ -15,8 +15,8 @@
     <% @stops.each do |stop| %>
       <tr>
         <td><%= stop.name %></td>
-        <td><%= stop.routes_description %></td>
-        <td><%= link_to 'Stop times', stop_path(stop) %></td>
+        <td><%= stop.routes_summary %></td>
+        <td><%= link_to 'Stop times', stop_path(stop.id) %></td>
       </tr>
     <% end %>
   </tbody>

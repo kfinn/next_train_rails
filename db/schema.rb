@@ -10,67 +10,6 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170112203004) do
+ActiveRecord::Schema.define(version: 0) do
 
-  # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
-  enable_extension "cube"
-  enable_extension "earthdistance"
-
-  create_table "routes", force: :cascade do |t|
-    t.string   "mta_id",      null: false
-    t.string   "short_name",  null: false
-    t.string   "long_name",   null: false
-    t.text     "description", null: false
-    t.string   "url",         null: false
-    t.string   "color"
-    t.string   "text_color"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
-    t.index ["mta_id"], name: "index_routes_on_mta_id", using: :btree
-  end
-
-  create_table "stop_times", force: :cascade do |t|
-    t.integer  "trip_id"
-    t.time     "arrival_time"
-    t.time     "departure_time"
-    t.integer  "stop_id"
-    t.datetime "created_at",                         null: false
-    t.datetime "updated_at",                         null: false
-    t.datetime "realtime_departure_time"
-    t.datetime "realtime_departure_time_updated_at"
-    t.index ["departure_time"], name: "index_stop_times_on_departure_time", using: :btree
-    t.index ["realtime_departure_time"], name: "index_stop_times_on_realtime_departure_time", using: :btree
-    t.index ["stop_id"], name: "index_stop_times_on_stop_id", using: :btree
-    t.index ["trip_id", "stop_id"], name: "index_stop_times_on_trip_id_and_stop_id", unique: true, using: :btree
-    t.index ["trip_id"], name: "index_stop_times_on_trip_id", using: :btree
-  end
-
-  create_table "stops", force: :cascade do |t|
-    t.string   "mta_id",         null: false
-    t.string   "name",           null: false
-    t.decimal  "latitude",       null: false
-    t.decimal  "longitude",      null: false
-    t.integer  "location_type",  null: false
-    t.integer  "parent_stop_id"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
-    t.index ["mta_id"], name: "index_stops_on_mta_id", using: :btree
-    t.index ["parent_stop_id"], name: "index_stops_on_parent_stop_id", using: :btree
-  end
-
-  create_table "trips", force: :cascade do |t|
-    t.integer  "route_id",     null: false
-    t.string   "service_id",   null: false
-    t.string   "mta_id",       null: false
-    t.integer  "direction_id", null: false
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
-    t.index ["mta_id"], name: "index_trips_on_mta_id", using: :btree
-    t.index ["route_id"], name: "index_trips_on_route_id", using: :btree
-  end
-
-  add_foreign_key "stop_times", "stops"
-  add_foreign_key "stop_times", "trips"
-  add_foreign_key "stops", "stops", column: "parent_stop_id"
 end

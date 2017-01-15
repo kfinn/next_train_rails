@@ -2,15 +2,15 @@ require 'csv'
 
 class MtaTripImporter
   def import!
-    CSV.foreach(MtaDataImporter.mta_data_root + 'trips.csv', headers: true) do |row|
-      Trip.find_or_initialize_by_mta_id(row['trip_id']).update!(
-        service_id: row['service_id'],
-        direction_id: row['direction_id'],
-        route: route_from_row(row))
+    CSV.foreach(ApplicationHelper.mta_data_root + 'trips.csv', headers: true) do |row|
+      Trip.new(
+        id: id_from_row(row),
+        route_id: row['route_id']
+      ).save
     end
   end
 
-  def route_from_row(row)
-    Route.find_by_mta_id row['route_id']
+  def id_from_row(row)
+    row['trip_id'].sub("#{row['service_id']}_", '')
   end
 end

@@ -2,23 +2,13 @@ require 'csv'
 
 class MtaStopTimeImporter
   def import!
-    CSV.foreach(MtaDataImporter.mta_data_root + 'stop_times.csv', headers: true) do |row|
-      StopTime.find_or_initialize_by(
-        trip: trip_from_row(row),
-        stop: stop_from_row(row)
-      ).update!(
-        arrival_time: adjust_invalid_datetime(row['arrival_time']),
-        departure_time: adjust_invalid_datetime(row['departure_time'])
-      )
+    CSV.foreach(ApplicationHelper.mta_data_root + 'stop_times.csv', headers: true) do |row|
+      StopTime.new(
+        trip_id: row['trip_id'].sub(/^[^_]+_/, ''),
+        stop_id: row['stop_id'],
+        scheduled: Time.zone.parse(adjust_invalid_datetime(row['departure_time']))
+      ).save
     end
-  end
-
-  def trip_from_row(row)
-    Trip.find_by_mta_id row['trip_id']
-  end
-
-  def stop_from_row(row)
-    Stop.find_by_mta_id row['stop_id']
   end
 
   def adjust_invalid_datetime(time)

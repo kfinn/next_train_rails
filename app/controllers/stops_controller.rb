@@ -1,6 +1,6 @@
 class StopsController < ApplicationController
   def index
-    @stops = Stop.root
+    @stops = Stop.all
   end
 
   def show

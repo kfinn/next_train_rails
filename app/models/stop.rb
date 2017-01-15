@@ -1,29 +1,31 @@
-class Stop < ApplicationRecord
-  include MtaIdentifiable
+class Stop
+  include ActiveModel::Model
 
-  belongs_to :parent_stop, class_name: 'Stop', optional: true
-  has_many :child_stops, class_name: 'Stop', foreign_key: :parent_stop_id
+  attr_accessor :id, :name, :latitude, :longitude, :stop_times, :child_stop_ids
 
-  has_many :stop_times
-  has_many :trips, -> { distinct }, through: :stop_times
-  has_many :routes, -> { distinct }, through: :trips
-  has_many :child_stop_routes, -> { distinct }, through: :child_stops, source: :routes
+  class << self
+    delegate :find, :all, to: :collection
 
-  enum location_type: [:child, :root]
+    private
 
-  validates :name, :latitude, :longitude, :location_type, presence: true
-  validates :parent_stop, absence: true, if: :root?
-  validates :parent_stop, presence: true, if: :child?
-
-  def routes_description
-    all_routes.pluck(:mta_id).sort.to_sentence
+    def collection
+      StopCollection.instance
+    end
   end
 
-  def all_routes
-    if root?
-      child_stop_routes
-    else
-      routes
-    end
+  def save
+    StopCollection.instance << self
+  end
+
+  def routes_summary
+    @routes_summary ||= stop_times.map(&:route_id).uniq.sort.to_sentence
+  end
+
+  def stop_times
+    @stop_times ||= []
+  end
+
+  def child_stop_ids
+    @child_stop_ids ||=[]
   end
 end
