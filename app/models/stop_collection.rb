@@ -20,6 +20,12 @@ class StopCollection
     @all ||= Set.new
   end
 
+  def near(position)
+    all.sort_by do |stop|
+      stop.position.distance_to position, formula: :flat
+    end
+  end
+
   def <<(stop)
     all << stop
     stops_by_id[stop.id] = stop

@@ -58,3 +58,4 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'google-protobuf', '~> 3.1'
 gem 'clockwork', '~> 2.0'
 gem 'foreman', '~> 0.82.0'
+gem 'geokit-rails'

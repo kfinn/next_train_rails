@@ -1,10 +1,11 @@
 class Stop
   include ActiveModel::Model
 
-  attr_accessor :id, :name, :latitude, :longitude, :stop_times, :child_stop_ids
+  attr_accessor :id, :name, :stop_times, :child_stop_ids
+  delegate :latitude, :latitude=, :longitude, :longitude=, to: :position
 
   class << self
-    delegate :find, :all, to: :collection
+    delegate :find, :all, :near, to: :collection
 
     private
 
@@ -15,6 +16,10 @@ class Stop
 
   def save
     StopCollection.instance << self
+  end
+
+  def position
+    @position ||= LatLng.new
   end
 
   def routes_summary
