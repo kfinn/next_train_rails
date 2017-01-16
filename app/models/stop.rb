@@ -33,4 +33,9 @@ class Stop
   def child_stop_ids
     @child_stop_ids ||=[]
   end
+
+  def next_stop_time
+    now = TimeOfDay.now
+    stop_times.sort_by { |st| st.best_estimate - now }.first
+  end
 end

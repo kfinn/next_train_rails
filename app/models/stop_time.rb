@@ -23,12 +23,24 @@ class StopTime
     Stop.find(stop_id).stop_times << self
   end
 
+  def scheduled=(scheduled)
+    @scheduled = TimeOfDay.from_datetime scheduled
+  end
+
   def latest_estimate=(latest_estimate)
-    @latest_estimate = latest_estimate
+    @latest_estimate = TimeOfDay.from_datetime latest_estimate
     self.latest_estimate_updated_at = Time.zone.now
   end
 
   def route_id
     @route_id ||= trip_id.sub(/^[^_]+_/, '').sub(/\.\..*$/, '')
+  end
+
+  def best_estimate
+    if latest_estimate && latest_estimate_updated_at > 6.hours.ago
+      latest_estimate
+    else
+      scheduled
+    end
   end
 end
