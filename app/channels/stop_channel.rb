@@ -2,7 +2,6 @@ class StopChannel < ApplicationCable::Channel
   def subscribed
     stream_from "stop_#{params[:stop]}"
   end
-  
 
   def unsubscribed
   end
