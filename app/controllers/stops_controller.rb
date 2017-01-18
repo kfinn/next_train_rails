@@ -3,7 +3,7 @@ class StopsController < ApplicationController
     if nearby_params.count == 2
       @stops = Stop.near LatLng.new nearby_params
     else
-      @stops = Stop.all
+      @stops = Stop.visible
     end
   end
 

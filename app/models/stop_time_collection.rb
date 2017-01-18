@@ -4,7 +4,8 @@ class StopTimeCollection
   def ensure_data_imported
     was_imported = @ensure_data_imported
     @ensure_data_imported = true
-    MtaStopTimeImporter.new.import! unless was_imported
+    # MtaStopTimeImporter.new.import! unless was_imported
+    StopTimesUpdate.new.update_stop_times!
   end
 
   def find(id)

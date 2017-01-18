@@ -20,8 +20,14 @@ class StopCollection
     @all ||= Set.new
   end
 
+  def visible
+    all.select do |stop|
+      stop.next_stop_time.present?
+    end
+  end
+
   def near(position)
-    all.sort_by do |stop|
+    visible.sort_by do |stop|
       stop.position.distance_to position, formula: :flat
     end
   end

@@ -1,3 +1,1 @@
-json.array! @stops do |stop|
-  json.(stop, :name, :routes_summary)
-end
+json.array! @stops

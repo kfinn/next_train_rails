@@ -5,7 +5,7 @@ class Stop
   delegate :latitude, :latitude=, :longitude, :longitude=, to: :position
 
   class << self
-    delegate :find, :all, :near, to: :collection
+    delegate :find, :all, :visible, :near, to: :collection
 
     private
 
@@ -35,7 +35,20 @@ class Stop
   end
 
   def next_stop_time
-    now = TimeOfDay.now
-    stop_times.sort_by { |st| st.best_estimate - now }.first
+    now = Time.zone.now
+    stop_times.select do |st|
+      st.latest_estimate.present? && st.latest_estimate > (now + 1.minute)
+    end.sort_by do |st|
+      st.latest_estimate - now
+    end.first
+  end
+
+  def as_json(options={})
+    {
+      id: self.id,
+      name: self.name,
+      routes_summary: self.routes_summary,
+      next_stop_time: next_stop_time.as_json
+    }
   end
 end
