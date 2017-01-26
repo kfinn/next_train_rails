@@ -1,6 +1,6 @@
 class StopsController < ApplicationController
   def index
-    if nearby_params.count == 2
+    if nearby_params[:latitude] && nearby_params[:longitude]
       @stops = Stop.near LatLng.new nearby_params
     else
       @stops = Stop.visible

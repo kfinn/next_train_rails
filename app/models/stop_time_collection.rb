@@ -1,10 +1,11 @@
 class StopTimeCollection
   include Singleton
 
-  def ensure_data_imported
-    was_imported = @ensure_data_imported
-    @ensure_data_imported = true
-    # MtaStopTimeImporter.new.import! unless was_imported
+  attr_accessor :updated_at
+
+  def ensure_fresh!
+    return if fresh?
+    self.updated_at = Time.zone.now
     StopTimesUpdate.new.update_stop_times!
   end
 
@@ -14,9 +15,15 @@ class StopTimeCollection
 
   def <<(stop_time)
     stop_times_by_id[stop_time.id] = stop_time
+    updated_at = Time.zone.now
   end
 
   def stop_times_by_id
     @stop_times_by_id ||= {}
+  end
+
+  def fresh?
+    updated_at #&& updated_at > 15.seconds.ago
+    # true
   end
 end

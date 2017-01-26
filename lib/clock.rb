@@ -4,5 +4,5 @@ require File.expand_path('../../config/environment', __FILE__)
 include Clockwork
 
 every 15.seconds, 'update_stop_times' do
-  StopTimesUpdate.new.update_stop_times!
+  StopTimesUpdate.new.notify!
 end

@@ -19,7 +19,7 @@
         <td><%= stop.routes_summary %></td>
         <td>
           <% if stop.next_stop_time %>
-            <%= stop.next_stop_time.route_id %> train: <%= time_ago_in_words stop.next_stop_time.best_estimate.to_datetime %>
+            <%= stop.next_stop_time.route_id %> train: <%= time_ago_in_words stop.next_stop_time.latest_estimate.to_datetime %>
           <% end %>
         </td>
         <td><%= link_to 'Stop times', stop_path(stop.id) %></td>

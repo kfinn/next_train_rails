@@ -1,12 +1,17 @@
 class StopCollection
   include Singleton
 
+  attr_accessor :import_started, :import_completed
+
   def ensure_data_imported
-    was_imported = @ensure_data_imported
-    @ensure_data_imported = true
-    unless was_imported
+    was_import_started = import_started
+    self.import_started = true
+    if self.import_completed
+      StopTimeCollection.instance.ensure_fresh!
+    elsif !was_import_started
       MtaStopImporter.new.import!
-      StopTimeCollection.instance.ensure_data_imported
+      StopTimeCollection.instance.ensure_fresh!
+      self.import_completed = true
     end
   end
 
