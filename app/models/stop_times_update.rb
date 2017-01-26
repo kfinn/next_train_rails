@@ -20,7 +20,7 @@ class StopTimesUpdate
        stop_time = StopTime.find_or_create_by(trip_id: trip_update.trip.trip_id, stop_id: stop_time_update.stop_id)
        stop_time.latest_estimate = Time.zone.at(stop_time_update.departure.time)
 
-       updated_stops << stop_time.stop
+       updated_stops << stop_time.parent_stop
      end
    end
   end

@@ -7,7 +7,8 @@
     <tr>
       <th>Name</th>
       <th>Routes</th>
-      <th>Next stop time</th>
+      <th>Next N stop time</th>
+      <th>Next S stop time</th>
       <th colspan="1"></th>
     </tr>
   </thead>
@@ -18,8 +19,13 @@
         <td><%= stop.name %></td>
         <td><%= stop.routes_summary %></td>
         <td>
-          <% if stop.next_stop_time %>
-            <%= stop.next_stop_time.route_id %> train: <%= time_ago_in_words stop.next_stop_time.latest_estimate.to_datetime %>
+          <% if stop.next_n_stop_time %>
+            <%= stop.next_n_stop_time.route_id %> train: <%= time_ago_in_words stop.next_n_stop_time.latest_estimate.to_datetime %>
+          <% end%>
+        </td>
+        <td>
+          <% if stop.next_s_stop_time %>
+            <%= stop.next_s_stop_time.route_id %> train: <%= time_ago_in_words stop.next_s_stop_time.latest_estimate.to_datetime %>
           <% end %>
         </td>
         <td><%= link_to 'Stop times', stop_path(stop.id) %></td>

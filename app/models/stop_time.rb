@@ -2,6 +2,7 @@ class StopTime
   include ActiveModel::Model
 
   attr_accessor :stop_id, :trip_id, :latest_estimate, :latest_estimate_updated_at
+  delegate :parent_stop, to: :child_stop
 
   def self.find_or_create_by(trip_id:, stop_id:)
     StopTimeCollection.instance.find(new(trip_id: trip_id, stop_id: stop_id).id) || new(trip_id: trip_id, stop_id: stop_id).tap(&:save)
@@ -15,16 +16,16 @@ class StopTime
     @id ||= "#{stop_id}_#{trip_id}"
   end
 
-  def stop
-    Stop.find(stop_id)
+  def child_stop
+    ChildStop.find stop_id
   end
 
   def stop_id=(stop_id)
     if @stop_id
-      stop.stop_times.select! { |stop_time| stop_time != self }
+      child_stop.stop_times.select! { |stop_time| stop_time != self }
     end
     @stop_id = stop_id
-    stop.stop_times << self
+    child_stop.stop_times << self
   end
 
   def latest_estimate=(latest_estimate)

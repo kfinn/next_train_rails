@@ -1,15 +1,33 @@
 require 'csv'
 
 class MtaStopImporter
+  class << self
+    attr_accessor :import_started, :import_completed
+
+    def ensure_data_imported
+      was_import_started = import_started
+      self.import_started = true
+      if self.import_completed
+        StopTimeCollection.instance.ensure_fresh!
+      elsif !was_import_started
+        new.import!
+        StopTimeCollection.instance.ensure_fresh!
+        self.import_completed = true
+      end
+    end
+  end
+
   def import!
     Rails.logger.info 'MtaStopImporter starting'
     CSV.foreach(ApplicationHelper.mta_data_root + 'stops.csv', headers: true) do |row|
-      parent_station = parent_stop_from_row row
-      if parent_station
-        parent_station.child_stop_ids << row['stop_id']
-        parent_station.save
+      parent_stop = parent_stop_from_row row
+      if parent_stop
+        ChildStop.new(
+          id: row['stop_id'],
+          parent_stop: parent_stop
+        ).save
       else
-        Stop.new(
+        ParentStop.new(
           id: row['stop_id'],
           name: row['stop_name'],
           latitude: row['stop_lat'],
@@ -22,7 +40,7 @@ class MtaStopImporter
 
   def parent_stop_from_row(row)
     if row['parent_station'].present?
-      Stop.find row['parent_station']
+      ParentStop.find row['parent_station']
     end
   end
 end

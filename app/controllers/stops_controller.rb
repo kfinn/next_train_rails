@@ -1,14 +1,14 @@
 class StopsController < ApplicationController
   def index
     if nearby_params[:latitude] && nearby_params[:longitude]
-      @stops = Stop.near LatLng.new nearby_params
+      @stops = ParentStop.near LatLng.new nearby_params
     else
-      @stops = Stop.visible
+      @stops = ParentStop.visible
     end
   end
 
   def show
-    @stop = Stop.find params[:id]
+    @stop = ParentStop.find params[:id]
   end
 
   def nearby_params
