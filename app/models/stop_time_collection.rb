@@ -23,7 +23,6 @@ class StopTimeCollection
   end
 
   def fresh?
-    updated_at #&& updated_at > 15.seconds.ago
-    # true
+    updated_at && updated_at > 15.seconds.ago
   end
 end
